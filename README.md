@@ -2,6 +2,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Tetris Clone development
 
+Demo: [https://tetris-clone.vercel.app/](https://tetris-clone.vercel.app/)
+
 Concepts to tackle for realizing Tetris game:
 
 * Creating a board matrix using styled components and CSS grid
