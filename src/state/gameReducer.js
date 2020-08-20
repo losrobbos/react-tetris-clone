@@ -1,7 +1,7 @@
 import { createMatrix, flushShapeToBoard, 
   clearShapeCurrentFromBoard, hasShapeCollided, fixShapeOnBoard, getRowsFilled, clearRows } from '../lib/boardHelpers';
 import * as actions from './actions';
-import { getRandomShape, getShapeDimensions, rotateShape } from '../lib/shapes';
+import { getRandomShape, rotateShape } from '../lib/shapes';
 import { gameStates } from './initialState';
 
 const gameReducer = (state, action) => {
@@ -9,18 +9,15 @@ const gameReducer = (state, action) => {
   console.log("Action received: ", action)
 
   let { board, shape, config, score } = state
-  let gameState
   let collided = false
+  let gameState
   let directionNew
-  let dimensions
 
   switch(action.type) {
 
     case actions.PAUSE_RESUME_GAME:
       gameState = state.gameState
-      console.log("Current game state: ", gameState)
       gameState = (gameState === gameStates.running ? gameStates.paused : gameStates.running)
-      console.log("Current game state: ", gameState)
       return { ...state, gameState }
 
     // create board matrix
@@ -40,16 +37,12 @@ const gameReducer = (state, action) => {
       // create new random shape and place it on board 
       shape = getRandomShape()
 
-      // calculate dimensions
-      shape.dimensions = getShapeDimensions(shape)
       shape.position = { row: 0, col: 2 } // give shape initial position
-
+      
       // check if new shape collides with existing fields => GAME OVER
       collided = hasShapeCollided(shape, board, config)
-
       shape = flushShapeToBoard(shape, board)
-
-      gameState = state.gameState
+      
       if(collided) {
         gameState = gameStates.lost
         shape = null
@@ -65,7 +58,6 @@ const gameReducer = (state, action) => {
       }
 
       directionNew = action.payload
-      dimensions = shape.dimensions
       let shapeCopy = {...shape, shape: [...shape.shape], position: {...shape.position}}
 
       // prepare move of shape in direction

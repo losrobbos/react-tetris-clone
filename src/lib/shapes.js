@@ -63,7 +63,6 @@ export const rotateShape = (shape) => {
   })
 
   shapeCopy.shape = arrRotated
-  shapeCopy.dimensions = getShapeDimensions(shapeCopy)
   
   return shapeCopy
 }
