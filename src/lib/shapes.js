@@ -11,15 +11,29 @@ const shapes = {
       ['1'],
       ['1'],
       ['1']
-    ],
+    ], 
     color: 'red'
   },
-  zet: {
+  z: {
     shape: [
       [ '1', '1', '' ],
       [ '', '1', '1' ] 
     ],
     color: 'green'
+  },
+  s: {
+    shape: [
+      [ '', '1', '1' ],
+      [ '1', '1', '' ] 
+    ],
+    color: 'green'
+  },
+  tri: {
+    shape: [
+      [ '1', '1', '1'],
+      [ '', '1', '']
+    ],
+    color: 'aqua'
   },
   l: {
     shape: [

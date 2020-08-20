@@ -1,7 +1,6 @@
 export const INIT_BOARD = "INIT_BOARD"
 export const INIT_SHAPE = "INIT_SHAPE"
 export const MOVE_SHAPE = "MOVE_SHAPE"
-export const ROTATE_SHAPE = "ROTATE_SHAPE"
 
 const action = (type, payload) => ({type, payload})
 
