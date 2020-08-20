@@ -49,7 +49,7 @@ const App = () => {
 
   useInterval(moveDown, config.moveIntervalInSeconds*1000)
 
-  const appClicked = (e) => {
+  const keyPressed = (e) => {
     let key = e.key.replace("Arrow", '').toLowerCase() // get which arrow was clicked
 
     if( e.keyCode === 32) { // spacebar
@@ -70,7 +70,7 @@ const App = () => {
   // const strBoard = JSON.stringify(board, null, 2)
 
   return (
-    <div ref={refApp} className="App" tabIndex={-1} onKeyDown={ gameOver() ? null : appClicked}>
+    <div ref={refApp} className="App" tabIndex={-1} onKeyDown={ gameOver() ? null : keyPressed}>
       <main>
         <Matrix height={480} rows={config.rows} cols={config.cols} className="stage" frozen={gameOver()} >{jsxMatrix}</Matrix>
       </main>
