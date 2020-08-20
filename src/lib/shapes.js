@@ -6,11 +6,11 @@ const shapes = {
     ],
     color: 'darkblue'
   },
-  line: {
+  i: {
     shape: [
-      ['1'],
-      ['1'],
-      ['1']
+      ['', '1', ''],
+      ['', '1', ''],
+      ['', '1', '']
     ], 
     color: 'red'
   },

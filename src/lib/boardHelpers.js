@@ -61,40 +61,19 @@ export const fixShapeOnBoard = (shape, board) => {
 }
 
 /**
- * Check if shape is out of bounds or interlaps fixed on new pos
- */
-export const hasShapeHitBounds = (shape, config) => {
-
-  let positionNew = shape.position
-
-  // prevent movement below left or upper bound
-  if(positionNew.row < 0 || positionNew.col < 0) {
-    return true
-  }
-
-  // prevent movement below right and lower bound
-  let { rows , cols } = config
-  let dimensions = shape.dimensions
-  let rowMax = positionNew.row + dimensions.rows -1
-  let colMax = positionNew.col + dimensions.cols -1
-
-  return ( (rows <= rowMax ) || (cols <= colMax ))
-}
-
-/**
- * Check if shape at this pos collided with ground or has overlap with a fixed cell
+ * Check if shape at this pos is out of bounds or has overlap with a fixed cell
+ * 
+ * - check all shape fields 
+ *  - is it on negative row?
+ *  - is it on negative col?
+ *  - is it on row >= board rows count?
+ *  - is it on col >= board rows count?
+ *  - is it on a fixed field?
+ * => in each case: Mark shape as collided
+ * 
  */
 export const hasShapeCollided = (shape, board, config) => {
 
-  // shape position + height
-  let shapeLastRowOnBoard = shape.position.row + shape.dimensions.rows
-
-  // check if shape is already on last board row => simplest collision case
-  if(shapeLastRowOnBoard >= config.rows+1) {
-    return true
-  }
-
-  // get last field of each shape column
   let arrShape = shape.shape
   let position = shape.position
 
@@ -102,9 +81,19 @@ export const hasShapeCollided = (shape, board, config) => {
   // if so: the shape has collided
   for(let r=0; r<arrShape.length; r++) {
     for(let c=0; c<arrShape[r].length; c++) {
-      if(arrShape[r][c] && board[r+position.row][c+position.col].fixed) {
-        return true
+      if(!arrShape[r][c]) {
+        continue;
       }
+      let fieldRow = r+position.row
+      let fieldCol = c+position.col
+
+      // out of bounds?
+      if(fieldRow < 0) { return true}
+      if(fieldCol < 0) { return true}
+      if(fieldRow >= config.rows) { return true }
+      if(fieldCol >= config.cols) { return true }
+      // collided with another shape?
+      if(board[fieldRow][fieldCol].fixed) { return true }
     }
   }
 

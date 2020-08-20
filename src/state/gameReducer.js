@@ -1,4 +1,4 @@
-import { createMatrix, hasShapeHitBounds, flushShapeToBoard, 
+import { createMatrix, flushShapeToBoard, 
   clearShapeCurrentFromBoard, hasShapeCollided, fixShapeOnBoard, getRowsFilled, clearRows } from '../lib/boardHelpers';
 import * as actions from './actions';
 import { getRandomShape, getShapeDimensions, rotateShape } from '../lib/shapes';
@@ -74,7 +74,7 @@ const gameReducer = (state, action) => {
         case 'left':
           shapeCopy.position.col--
           // prevent moving into other shape or out of board bounds
-          if(hasShapeHitBounds(shapeCopy, config) || hasShapeCollided(shapeCopy, board, config)) {
+          if(hasShapeCollided(shapeCopy, board, config)) {
             return state 
           }
           break;
@@ -83,7 +83,7 @@ const gameReducer = (state, action) => {
         case 'right':
           shapeCopy.position.col++
           // prevent moving into other shape or out of board bounds
-          if(hasShapeHitBounds(shapeCopy, config) || hasShapeCollided(shapeCopy, board, config)) {
+          if(hasShapeCollided(shapeCopy, board, config)) {
             return state 
           }
           break;
@@ -94,7 +94,7 @@ const gameReducer = (state, action) => {
         case 'up':
 
           shapeCopy = rotateShape(shapeCopy)
-          if(hasShapeHitBounds(shapeCopy, config) || hasShapeCollided(shapeCopy, board, config)) {
+          if(hasShapeCollided(shapeCopy, board, config)) {
             return state 
           }
           break;
@@ -110,7 +110,7 @@ const gameReducer = (state, action) => {
           shapeCopy.position.row++
 
           // check for colission with ground or other shape
-          collided = (hasShapeHitBounds(shapeCopy, config) || hasShapeCollided(shapeCopy, board, config))
+          collided = hasShapeCollided(shapeCopy, board, config)
 
           // if collided => fix shape on board and return (do not perform down move)
           if(collided) {
