@@ -2,19 +2,7 @@ import { createMatrix, hasShapeHitBounds, flushShapeToBoard,
   clearShapeCurrentFromBoard, hasShapeCollided, fixShapeOnBoard, getRowsFilled, clearRows } from '../lib/boardHelpers';
 import * as actions from './actions';
 import { getRandomShape, getShapeDimensions, rotateShape } from '../lib/shapes';
-
-export const gameStates = { notstarted: 'notstarted', running: 'running', paused: 'paused', won: 'won', lost: 'list' }
-
-export const keys = { up: 'up', down: 'down', left: 'left', right: 'right' }
- 
-export const initialState = {
-  board: [],
-  shapes: [],
-  config: { rows: 12, cols: 6, moveIntervalInSeconds: 1, baseColor: 'orange' },
-  gameState: gameStates.running,
-  score: 0
-}
-
+import { gameStates } from './initialState';
 
 const gameReducer = (state, action) => {
 
@@ -27,6 +15,13 @@ const gameReducer = (state, action) => {
   let dimensions
 
   switch(action.type) {
+
+    case actions.PAUSE_RESUME_GAME:
+      gameState = state.gameState
+      console.log("Current game state: ", gameState)
+      gameState = (gameState === gameStates.running ? gameStates.paused : gameStates.running)
+      console.log("Current game state: ", gameState)
+      return { ...state, gameState }
 
     // create board matrix
     case actions.INIT_BOARD:
@@ -64,8 +59,8 @@ const gameReducer = (state, action) => {
 
     case actions.MOVE_SHAPE:
 
-      // no shape = no move
-      if(!shape) {
+      // no shape or pause = no move
+      if(!shape || state.gameState == gameStates.paused) {
         return state
       }
 

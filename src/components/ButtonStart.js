@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 const ButtonStart = styled.button`
-  width: 250px;
   padding: 8px 0;
   margin: 5px 0;
   text-align: center;

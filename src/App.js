@@ -4,8 +4,9 @@ import Matrix from './components/Matrix'
 import Field from './components/Field'
 import ButtonStart from './components/ButtonStart'
 import GameState from './components/GameState'
-import gameReducer, { initialState, gameStates } from './state/gameReducer';
-import { initBoard, moveShape, initShape } from './state/actions';
+import gameReducer from './state/gameReducer';
+import { initialState, gameStates } from './state/initialState';
+import { initBoard, moveShape, initShape, pauseResumeGame } from './state/actions';
 import useInterval from './hooks/useInterval';
 
 const App = () => {
@@ -37,12 +38,26 @@ const App = () => {
   const moveDown = () => {    
     dispatch(moveShape("down"))
   }
-  useInterval(moveDown, config.moveIntervalInSeconds*1000)
 
+  const gameRunning = () => {
+    return gameState === gameStates.running
+  }
+
+  const gameOver = () => {
+    return gameState === gameStates.lost
+  }
+
+  useInterval(moveDown, config.moveIntervalInSeconds*1000)
 
   const appClicked = (e) => {
     let key = e.key.replace("Arrow", '').toLowerCase() // get which arrow was clicked
-    dispatch(moveShape(key))
+
+    if( e.keyCode === 32) { // spacebar
+      dispatch(pauseResumeGame())
+    } 
+    else {
+      dispatch(moveShape(key))
+    }
   }
 
   const createMatrixUI = () => {
@@ -54,22 +69,16 @@ const App = () => {
   
   // const strBoard = JSON.stringify(board, null, 2)
 
-  const gameOver = () => {
-    return gameState === gameStates.lost
-  }
-
   return (
     <div ref={refApp} className="App" tabIndex={-1} onKeyDown={ gameOver() ? null : appClicked}>
       <main>
-        <Matrix cols={config.cols} className="stage" frozen={gameOver()} >{jsxMatrix}</Matrix>
+        <Matrix height={480} rows={config.rows} cols={config.cols} className="stage" frozen={gameOver()} >{jsxMatrix}</Matrix>
       </main>
       <div>Score: {score}</div>
-      { gameOver() && (
-      <div>
-        <ButtonStart onClick={startGame}>Restart Game</ButtonStart>
-        <GameState>YOU LOST!</GameState>
+      <div className="controls">
+        <GameState>{ gameRunning() || gameState }</GameState>
+        { gameOver() && <ButtonStart onClick={startGame}>Restart Game</ButtonStart> }
       </div>
-      )}
       {/* <button onClick={() => console.log(strBoard)}>Show board</button> */}
     </div>
   );
